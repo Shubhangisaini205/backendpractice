@@ -10,14 +10,9 @@ const { AuthMidddleware } = require("./middlewares/AuthMiddleware");
  app.get("/",(req,res)=>{
     res.send("OK")
  })
-
-
-
  app.use("/user",UserRouter)
  app.use( AuthMidddleware)
  app.use("/product",ProductRouter)
-
-
  app.listen(8080, async()=>{
    try {
       await connection

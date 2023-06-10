@@ -8,10 +8,10 @@ const { Validator } = require("../middlewares/Vaildator");
 
 //REGISTER the user
 UserRouter.post("/register",Validator,async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password,age } = req.body;
     try {
         bcrypt.hash(password, 5, async (err, hash) => {
-            const user = new UserModel({ name, email, password: hash })
+            const user = new UserModel({ name, email, password: hash,age })
             await user.save();
             res.status(200).send({ "msg": "Account Created" })
         });
@@ -36,6 +36,7 @@ UserRouter.get("/", async (req, res) => {
 })
 
 // Login the user
+
 UserRouter.post("/login", async (req, res) => {
     const { email, password } = req.body
     try {

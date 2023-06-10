@@ -18,8 +18,29 @@ ProductRouter.post("/add", async (req, res) => {
 
 // to get all the data
 ProductRouter.get("/all", async (req, res) => {
+    let {title,min,max,sort,page,limit}= req.query;
+    
+    let Query={};
+    if(title){
+        Query.title= { $regex: title, $options: "i" }
+    }else if(min&max){
+        Query.$and =[{price:{$gte:min}},{price:{$lte:max}}]
+    }
+    else if(min){
+        Query.price = {$gte:min}
+    }else if(max){
+        Query.price = {$lte:max}
+    }
+    
+    let sortBy = {};
+    if(sort=="asc"){
+        sortBy.price=1
+    }else if(sort=="desc"){
+        sortBy.price=-1
+    }
+
     try {
-        const products = await ProductModel.find()
+        const products = await ProductModel.find(Query).sort(sortBy).skip((limit* +page)-limit).limit(limit)
         res.status(200).send(products)
     } catch (error) {
         console.log(error);
